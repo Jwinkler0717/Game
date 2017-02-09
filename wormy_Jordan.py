@@ -7,8 +7,9 @@
 #KRT 14/06/2012 Added a non-busy wait to Game Over screen to reduce processor loading from near 100%
 import random, pygame, sys
 from pygame.locals import *
+from time import sleep as wait
 
-FPS = 15
+FPS = 10
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
 CELLSIZE = 20
@@ -32,6 +33,7 @@ LEFT = 'left'
 RIGHT = 'right'
 
 HEAD = 0 # syntactic sugar: index of the worm's head
+timer = 0
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
@@ -56,10 +58,10 @@ def runGame():
                   {'x': startx - 1, 'y': starty},
                   {'x': startx - 2, 'y': starty}]
     direction = RIGHT
-
+    
     # Start the apple in a random place.
     apple = getRandomLocation()
-
+    timer = 0
     while True: # main game loop
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
@@ -87,9 +89,14 @@ def runGame():
         if wormCoords[HEAD]['x'] == apple['x'] and wormCoords[HEAD]['y'] == apple['y']:
             # don't remove worm's tail segment
             apple = getRandomLocation() # set a new apple somewhere
+            timer = 0
         else:
             del wormCoords[-1] # remove worm's tail segment
-
+            timer += 1
+            wait(1)
+            if timer <= 60:
+                apple = getRandomLocation()
+                timer = 0
         # move the worm by adding a segment in the direction it is moving
         if direction == UP:
             newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] - 1}
