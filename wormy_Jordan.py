@@ -9,7 +9,7 @@ import random, pygame, sys
 from pygame.locals import *
 from time import sleep as wait
 
-FPS = 10
+FPS = 15
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
 CELLSIZE = 20
